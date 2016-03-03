@@ -57,7 +57,7 @@ public class CongressionalActivity extends Activity {
         if(zip.equals("12345")){
             cong[0] = new Congressman("John Joe Doe", "nobody@somebody.com", "www.yellowpages.com", 12345, "@nobody", "Something Something something tweet", R.drawable.pic1, "Democrat", "Representative");
             cong[1] = new Congressman("Ulysses Hiram Grant", "dedguy@yahoo.com", "www.usgrant.com", 12345, "@someoneelse", "It sure sucks being dead!", R.drawable.pic2, "Republican", "House");
-            cong[2] = new Congressman("Bro Dude Guy", "bro@yoloswag.com", "www.dudchan.com", 12345, "@guybro", "Dude I'm a politician bro", R.drawable.pic3, "Republican", "Representative");
+            cong[2] = new Congressman("Dude Bro Guy", "bro@yoloswag.com", "www.dudchan.com", 12345, "@guybro", "Dude I'm a politician bro", R.drawable.pic3, "Republican", "Representative");
         }else if(zip.equals("67890")){
             cong[0] = new Congressman("New guy 1", "nobody@somebody.com", "www.yellowpages.com", 67890, "@nobody", "Something Something something tweet", R.drawable.pic4, "Democrat", "Representative");
             cong[1] = new Congressman("New guy 2", "dedguy@yahoo.com", "www.usgrant.com", 67890, "@someoneelse", "It sure sucks being dead!", R.drawable.pic5, "Democrat", "House");

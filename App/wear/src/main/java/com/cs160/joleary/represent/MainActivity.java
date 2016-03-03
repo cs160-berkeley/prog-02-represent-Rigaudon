@@ -230,5 +230,11 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
         sendIntent.putExtra("shake", 1);
         sendIntent.putExtra("zip", randzip);
         startService(sendIntent);
+
+        Intent sendIntent2 = getIntent();
+        sendIntent2.putExtra("loc", randzip);
+        sendIntent2.putExtra("curr", 0);
+        startActivity(sendIntent2);
+
     }
 }

@@ -8,7 +8,7 @@ Michael Wu ([wu.michael.m@berkeley.edu](mailto:wu.michael.m@berkeley.edu))
 
 ## Demo Video
 
-See [your demo video title here] (https://link_to_your_video)
+See [the demo video: https://youtu.be/crl9s5q0dRI] (https://youtu.be/crl9s5q0dRI)
 
 ## Screenshots
 

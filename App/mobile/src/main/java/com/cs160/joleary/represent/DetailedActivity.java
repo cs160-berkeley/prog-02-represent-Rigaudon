@@ -47,10 +47,10 @@ public class DetailedActivity extends Activity {
         }else if(name.equals("New guy 2")) {
             c = new Congressman("New guy 2", "dedguy@yahoo.com", "www.usgrant.com", 67890, "@someoneelse", "It sure sucks being dead!", R.drawable.pic5, "Democrat", "House");
             pic.setImageResource(R.drawable.pic5large);
-        }else if(name.equals("New guy 3")) {
-            c = new Congressman("Ulysses Hiram Grant", "dedguy@yahoo.com", "www.usgrant.com", 12345, "@someoneelse", "It sure sucks being dead!", R.drawable.pic6, "Republican", "House");
+        }else if(name.equals("Dude Bro Guy")) {
+            c = new Congressman("Dude Bro Guy", "bro@yoloswag.com", "www.dudchan.com", 12345, "@guybro", "Dude I'm a politician bro", R.drawable.pic3, "Republican", "Representative");
             pic.setImageResource(R.drawable.pic6large);
-        }else if(name.equals("Bro Dude Guy")){
+        }else if(name.equals("New guy 3")){
             c = new Congressman("New guy 3", "bro@yoloswag.com", "www.dudchan.com", 67890, "@guybro", "Dude I'm a politician bro", R.drawable.pic6, "Democrat", "House");
             pic.setImageResource(R.drawable.pic3large);
         }else{
