@@ -3,10 +3,14 @@ package com.cs160.joleary.represent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.wearable.view.DismissOverlayView;
 import android.util.Log;
@@ -14,10 +18,18 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class MainActivity extends Activity implements View.OnTouchListener, SensorEventListener {
+
+
+
 
     //private TextView mTextView;
     //private Button mFeedBtn;
@@ -28,6 +40,8 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
     private static final int SHAKE_THRESHOLD = 600;
+    private Double obama, romney;
+    public static Activity fa;
     //code for accelerometer based off of http://code.tutsplus.com/tutorials/using-the-accelerometer-on-android--mobile-22125
 
     //to be removed
@@ -35,6 +49,10 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(MainActivity.fa!=null){
+            MainActivity.fa.finish();
+        }
+        fa = this;
         setContentView(R.layout.activity_main);
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -49,21 +67,33 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
         int curr=0;
         String[] people;
         String[] parties;
-        int loc;
+        String[] images;
+        String data;
         if(extras!=null){
-            loc = extras.getInt("loc");
+            data = extras.getString("loc");
             curr = extras.getInt("curr");
         }else{
             //change me
-            loc = 12345;
+            data = "";
             curr = 0;
         }
 
+        Log.d("T","data is "+data);
         //changeme
-        people = getCandidates(loc)[0];
-        parties = getCandidates(loc)[1];
+        String[][] candidates = getCandidates(data);
+        String county,state,zip;
+        people = candidates[0];
+        parties = candidates[1];
+        images = candidates[2];
+        obama = Double.parseDouble(candidates[3][0]);
+        romney = Double.parseDouble(candidates[3][1]);
+        Log.d("T", "obama is "+obama+", romney is "+romney);
+        zip = candidates[4][0];
+        state = candidates[4][1];
+        county = candidates[4][2];
+        Log.d("T",county+state+zip);
         //changeme
-        final int l = loc;
+        final String l = data;
         final int c = (curr + 1) % people.length;
 
         mDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
@@ -72,7 +102,9 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
                 Intent i = new Intent(MainActivity.this, MainActivity.class);
                 i.putExtra("loc", l);
                 i.putExtra("curr", c);
+
                 startActivity(i);
+
                 return true;
             }
 
@@ -87,15 +119,25 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
         LinearLayout txt = (LinearLayout) findViewById(R.id.txtlayout);
         ((TextView) txt.findViewById(R.id.name)).setText(people[curr]);
         ((TextView) txt.findViewById(R.id.type)).setText(parties[curr]);
-        pic.setBackgroundResource(getCandidatePic(people[curr]));
+
+        new ImageLoadTask(images[curr],pic).execute();
+
         if(parties[curr].equals("Democrat")){
             txt.setBackgroundResource(R.drawable.dembg);
         }else if(parties[curr].equals("Republican")){
+            txt.setBackgroundResource(R.drawable.repbg);
+        }else{
+            //TODO: indep
             txt.setBackgroundResource(R.drawable.repbg);
         }
 
         Log.d("T", "curr is " + Integer.toString(curr));
         final String p = people[curr];
+        final String s = state;
+        final String cnty = county;
+        final String z = zip;
+        final Double o = obama;
+        final Double r = romney;
         pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +146,11 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
                 Intent i = new Intent(MainActivity.this, VoteView.class);
                 i.putExtra("loc", l);
                 i.putExtra("prev", p);
+                i.putExtra("state", s);
+                i.putExtra("county", cnty);
+                i.putExtra("zip", z);
+                i.putExtra("obama", o);
+                i.putExtra("romney",r);
                 startActivity(i);
 
             }
@@ -114,43 +161,44 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
                 randomizePlace();
             }
         });
-/*
-        mFeedBtn = (Button) findViewById(R.id.feed_btn);
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-
-        if (extras != null) {
-            String catName = extras.getString("CAT_NAME");
-            mFeedBtn.setText("Feed " + catName);
-        }
-
-        mFeedBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent sendIntent = new Intent(getBaseContext(), WatchToPhoneService.class);
-                startService(sendIntent);
-            }
-        });
-        */
     }
 
-    private int getCandidatePic(String name){
-        //Change me later.
-        if(name.equals("Ulysses Hiram Grant")){
-            return R.drawable.pic2;
-        }else if(name.equals("John Joe Doe")){
-            return R.drawable.pic1;
-        }else if(name.equals("Dude Bro Guy")){
-            return R.drawable.pic3;
-        }else if(name.equals("New guy 1")){
-            return R.drawable.pic4;
-        }else if(name.equals("New guy 2")){
-            return R.drawable.pic5;
-        }else if(name.equals("New guy 3")){
-            return R.drawable.pic6;
+
+    public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private String url;
+        private View v;
+
+        public ImageLoadTask(String url, View v) {
+            this.url = url;
+            this.v = v;
         }
-        return 0;
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                URL urlConnection = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlConnection
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            //result = Bitmap.createScaledBitmap(result,130,160,false);
+            v.setBackground(new BitmapDrawable(result));
+        }
+
     }
 
     @Override
@@ -158,35 +206,29 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
         return mDetector.onTouchEvent(ev)  || super.onTouchEvent(ev);
     }
 
-    private String[][] getCandidates(int zip){
-        //depends on loc
-        String[] people;
-        String[] parties;
-        if(zip==12345){
-            people = new String[3];
-            people[0] = "John Joe Doe";
-            people[1] = "Ulysses Hiram Grant";
-            people[2] = "Dude Bro Guy";
-            parties = new String[3];
-            parties[0] = "Democrat";
-            parties[1] = "Republican";
-            parties[2] = "Republican";
-        }else if(zip==67890) {
-            people = new String[3];
-            people[0] = "New guy 1";
-            people[1] = "New guy 2";
-            people[2] = "New guy 3";
-            parties = new String[3];
-            parties[0] = "Democrat";
-            parties[1] = "Democrat";
-            parties[2] = "Democrat";
-        }else{
-            people = new String[0];
-            parties = new String[0];
+    private String[][] getCandidates(String data){
+        String[] splitdata = data.split(";");
+        int count = Integer.parseInt(splitdata[0]);
+        String[] people = new String[count];
+        String[] parties = new String[count];
+        String[] images = new String[count];
+
+        for(int i=0;i<count;i++){
+            people[i] = splitdata[i*3+1];
+            parties[i] = splitdata[i*3+2];
+            images[i] = splitdata[i*3+3];
         }
-        String[][] r = new String[2][];
+        String[][] r = new String[5][];
         r[0] = people;
         r[1] = parties;
+        r[2] = images;
+        r[3] = new String[2];
+        r[4] = new String[3];
+        r[3][0] = splitdata[splitdata.length-2];
+        r[3][1] = splitdata[splitdata.length-1];
+        r[4][0] = splitdata[splitdata.length-3];
+        r[4][1] = splitdata[splitdata.length-4];
+        r[4][2] = splitdata[splitdata.length-5];
         return r;
     }
 
@@ -224,17 +266,19 @@ public class MainActivity extends Activity implements View.OnTouchListener, Sens
     }
 
     private void randomizePlace(){
-        int randzip = 67890;
+        int randzip = 52342;
         //send to phone
+        //int randzip = Math.round(Math.random()*90000+10000);
+
         Intent sendIntent = new Intent(getBaseContext(), WatchToPhoneService.class);
         sendIntent.putExtra("shake", 1);
         sendIntent.putExtra("zip", randzip);
         startService(sendIntent);
-
+/*
         Intent sendIntent2 = getIntent();
         sendIntent2.putExtra("loc", randzip);
         sendIntent2.putExtra("curr", 0);
         startActivity(sendIntent2);
-
+*/
     }
 }

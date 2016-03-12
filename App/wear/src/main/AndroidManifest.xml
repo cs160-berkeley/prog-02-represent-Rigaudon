@@ -32,6 +32,10 @@
         <activity
             android:name=".VoteView"
             android:label="@string/title_activity_vote_view"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="aca5a33f02d3ef5f3336ba9930333d468878813f" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

@@ -24,7 +24,10 @@ private static final String SHAKE = "/shake";
         Log.d("T", "in PhoneListenerService, got: " + messageEvent.getPath());
         if( messageEvent.getPath().equalsIgnoreCase(SHAKE) ) {
             String value = new String(messageEvent.getData(), StandardCharsets.UTF_8);
-            Intent intent = new Intent(this, CongressionalActivity.class );
+            Intent intent = new Intent(this, MainActivity.class );
+            if(CongressionalActivity.fa!=null){
+                CongressionalActivity.fa.finish();
+            }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("Zip", value);
             startActivity(intent);

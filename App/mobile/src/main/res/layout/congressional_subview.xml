@@ -28,7 +28,7 @@
         android:layout_below="@+id/name"
         android:layout_alignParentStart="true"
         android:layout_margin="10dp"
-        android:paddingTop="3dp" />
+        android:paddingTop="2dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,29 +41,18 @@
         android:padding="10dp"
         android:layout_below="@+id/name"
         android:gravity="top|center"
-        android:textSize="30dp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/twitter"
-        android:src="@drawable/twitter"
-        android:foregroundGravity="center"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:layout_below="@+id/party"
-        android:layout_toEndOf="@+id/picture"
-        android:paddingLeft="25dp" />
+        android:textSize="30dp"
+        android:layout_marginTop="-15dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/info"
         android:background="@drawable/bg_selector_info"
+        android:padding="10dp"
         android:layout_below="@+id/picture"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/twitter"
-        android:padding="10dp" />
+        android:paddingLeft="12dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -73,12 +62,13 @@
         android:id="@+id/email"
         android:textAlignment="center"
         android:gravity="center"
+        android:textSize="18dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@+id/twitter2"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/info"
-        android:layout_below="@+id/twitter"
-        android:layout_margin="5dp"
-        android:textSize="18dp"
-        android:paddingTop="10dp" />
+        android:layout_marginTop="-6dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -87,29 +77,25 @@
         android:text="www.website.com"
         android:id="@+id/website"
         android:gravity="center"
+        android:textSize="18dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_below="@+id/email"
         android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/email"
-        android:layout_margin="5dp"
-        android:textSize="18dp" />
+        android:layout_toEndOf="@+id/info"
+        android:paddingTop="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="\@someone"
-        android:id="@+id/twitter1"
-        android:layout_alignTop="@+id/twitter"
-        android:layout_alignLeft="@+id/twitter"
-        android:layout_marginLeft="115dp"
-        android:layout_marginTop="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="tweetweetweetwetetwetwet tweetweetweetwetetwetwet tweetweetweetwetetwetwet"
         android:id="@+id/twitter2"
-        android:layout_below="@+id/twitter1"
-        android:layout_alignLeft="@+id/twitter1"
-        android:paddingRight="10dp" />
+        android:paddingRight="20dp"
+        android:textColor="#464646"
+        android:layout_above="@+id/info"
+        android:layout_alignStart="@+id/party"
+        android:layout_below="@+id/party"
+        android:maxHeight="100dp"
+        android:layout_marginTop="-15dp" />
 </RelativeLayout>

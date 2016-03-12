@@ -16,13 +16,21 @@ public class WatchListenerService extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         Log.d("T", "in WatchListenerService, got: " + messageEvent.getPath());
+        if(MainActivity.fa!=null) {
+            MainActivity.fa.finish();
+        }
+        if(VoteView.fa!=null) {
+            VoteView.fa.finish();
+        }
         String value = new String(messageEvent.getData(), StandardCharsets.UTF_8);
         Intent intent = new Intent(this, MainActivity.class );
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //you need to add this flag since you're starting a new activity from a service
-        intent.putExtra("loc", Integer.parseInt(value));
+        Log.d("T","Watch got val "+value);
+        intent.putExtra("loc", value);
         intent.putExtra("curr",0);
         startActivity(intent);
+        Log.d("T", "activity started");
 
     }
 }
